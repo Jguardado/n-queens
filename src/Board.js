@@ -153,23 +153,6 @@
     //   //debugger
     //   //for each row push each item at index[blank] into its own array titled coloumn
 
-    //   //make this into a conversion function
-    //   var columnBasedMatrix = []
-      
-    //   for (var i = 0; i < 4; i++){
-    //     var row = this.attributes[i];
-
-    //     var columnArray = []
-    //     for (var j = 0; j < 4; j++){
-    //         columnArray.push(this.attributes[i][j])
-    //     }
-    //     //console.log(columnArray);
-    //     columnBasedMatrix.push(columnArray.slice());
-
-    //   }
-    //   //console.log(columnBasedMatrix);
-    //   //end of conversion function
- 
     //   //debugger
     //   for (var i = 0; i < 4; i++){
     //     var column = columnBasedMatrix[i];
@@ -197,9 +180,8 @@ return false;
     // --------------------------------------------------------------
     //
     // test if a specific major diagonal on this board contains a conflict
-    hasMajorDiagonalConflictAt: function(colNum) {
+    hasMajorDiagonalConflictAt: function(colNum, rowNum) {
         //debugger
-        var rowNum = 0;
         var table = this.attributes;
       //with index provided
         var size = table.n;
@@ -230,7 +212,12 @@ return false;
     // test if any major diagonals on this board contain conflicts
     hasAnyMajorDiagonalConflicts: function() {
       for (var i = 0; i < this.attributes.n; i++) {
-        if (this.hasMajorDiagonalConflictAt(i) === true) {
+        if (this.hasMajorDiagonalConflictAt(i, 0) === true) {
+          return true;
+        }
+      };
+      for (var j = 1; j < this.attributes.n-1; j++) {
+        if (this.hasMajorDiagonalConflictAt(0, j) === true) {
           return true;
         }
       };
@@ -238,17 +225,71 @@ return false;
     },
 
 
+//Memories
+//     convertToColumn: function (matrix) {
+  
+//       var columnBasedMatrix = []
+      
+//       for (var i = 0; i < 4; i++){
+//         var row = this.attributes[i];
+
+//         var columnArray = []
+//         for (var j = 0; j < 4; j++){
+//             columnArray.push(this.attributes[i][j])
+//         }
+//         //console.log(columnArray);
+//         columnBasedMatrix.push(columnArray.slice());
+
+//       }
+//       return columnBasedMatrix;
+ 
+// },
+
+
+  
 
     // Minor Diagonals - go from top-right to bottom-left
     // --------------------------------------------------------------
     //
     // test if a specific minor diagonal on this board contains a conflict
-    hasMinorDiagonalConflictAt: function(minorDiagonalColumnIndexAtFirstRow) {
+    hasMinorDiagonalConflictAt: function(colNum, rowNum) {
+         // debugger
+        var table = this.attributes;
+      //with index provided
+        var size = table.n;
+      var diagonalLine = [];
+      
+      var recurse = function (colNum, rowNum){
+          if(colNum < size - 1 && rowNum > 0){
+          diagonalLine.push(table[rowNum][colNum])
+              recurse(colNum + 1, rowNum - 1);            
+              console.log(diagonalLine);   
+          }        
+      }
+      recurse(colNum,rowNum);
+      var filteredDiag = diagonalLine.filter(function (value) {
+        return value === 1;
+      })
+      if (filteredDiag.length > 1) {
+        return true;
+      };
+
       return false; // fixme
     },
 
     // test if any minor diagonals on this board contain conflicts
     hasAnyMinorDiagonalConflicts: function() {
+   debugger
+      for (var i = 0; i < this.attributes.n; i++) {
+        if (this.hasMinorDiagonalConflictAt(0, i) === true) {
+          return true;
+        }
+      };
+      for (var j = this.attributes.n-2; j >= 1; j--) {// pos bug
+        if (this.hasMinorDiagonalConflictAt(0,j) === true) {
+          return true;
+        }
+      };
       return false; // fixme
     }
 
