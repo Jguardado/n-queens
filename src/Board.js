@@ -3,7 +3,6 @@
 // The only portions you need to work on are the helper functions (below)
 
 (function() {
-
   window.Board = Backbone.Model.extend({
 
     initialize: function (params) {
@@ -78,13 +77,38 @@
     // --------------------------------------------------------------
     //
     // test if a specific row on this board contains a conflict
+    // debugger
     hasRowConflictAt: function(rowIndex) {
-      return false; // fixme
-    },
+       //debugger
 
+      var row = this.attributes[rowIndex];
+
+      var filteredRow = row.filter(function (value) {
+          //console.log('return array of 1s');
+          return value === 1;
+
+        });
+        //console.log(filteredRow);
+        if (filteredRow.length > 1) {
+          //console.log('conflict found');
+          return true;
+        } 
+    //console.log('conflict not found');
+
+    return false; 
+    },
+    // var newBoard = makeEmptyMatrix();
     // test if any rows on this board contain conflicts
     hasAnyRowConflicts: function() {
-      return false; // fixme
+// debugger
+    // console.log(this.attributes);
+      //console.log(window.Board)
+      for (var i = 0; i < this.attributes.n; i++){
+        if (this.hasRowConflictAt(i) === true) {
+          return true
+        }
+      }
+      return false
     },
 
 
@@ -94,12 +118,77 @@
     //
     // test if a specific column on this board contains a conflict
     hasColConflictAt: function(colIndex) {
-      return false; // fixme
+      // return false; // fixme
+      var column = [];
+      for (var i = 0; i < this.attributes.n; i++) {
+         column.push(this.attributes[i][colIndex]);
+      };
+       var filteredColumn = column.filter(function (value) {
+          //console.log('return array of 1s');
+          return value === 1;
+
+        });
+        //console.log(filteredCol);
+        if (filteredColumn.length > 1) {
+          //console.log('conflict found');
+          return true;
+        } 
+    //console.log('conflict not found');
+
+    return false; 
+    
+
     },
 
     // test if any columns on this board contain conflicts
     hasAnyColConflicts: function() {
-      return false; // fixme
+      for (var i = 0; i < this.attributes.n; i++){
+        if (this.hasColConflictAt(i) === true) {
+          return true
+        }
+      }
+      return false
+
+
+    //   //debugger
+    //   //for each row push each item at index[blank] into its own array titled coloumn
+
+    //   //make this into a conversion function
+    //   var columnBasedMatrix = []
+      
+    //   for (var i = 0; i < 4; i++){
+    //     var row = this.attributes[i];
+
+    //     var columnArray = []
+    //     for (var j = 0; j < 4; j++){
+    //         columnArray.push(this.attributes[i][j])
+    //     }
+    //     //console.log(columnArray);
+    //     columnBasedMatrix.push(columnArray.slice());
+
+    //   }
+    //   //console.log(columnBasedMatrix);
+    //   //end of conversion function
+ 
+    //   //debugger
+    //   for (var i = 0; i < 4; i++){
+    //     var column = columnBasedMatrix[i];
+        
+    //     var filteredColumn = column.filter(function (value) {
+    //       //console.log('return array of 1s');
+    //       return value === 1;
+
+    //     });
+    //     //console.log(filteredRow);
+    //     if (filteredColumn.length > 1) {
+    //       //console.log('conflict found');
+    //       return false;
+    //     }
+    //   } 
+    // //onsole.log('conflict not found');
+
+    // return true; 
+return false;
     },
 
 
@@ -108,12 +197,43 @@
     // --------------------------------------------------------------
     //
     // test if a specific major diagonal on this board contains a conflict
-    hasMajorDiagonalConflictAt: function(majorDiagonalColumnIndexAtFirstRow) {
+    hasMajorDiagonalConflictAt: function(colNum) {
+        //debugger
+        var rowNum = 0;
+        var table = this.attributes;
+      //with index provided
+        var size = table.n;
+      var diagonalLine = [];
+      
+      var recurse = function (colNum, rowNum){
+          if(colNum < size && rowNum < size){
+          diagonalLine.push(table[rowNum][colNum])
+              recurse(colNum + 1, rowNum + 1);            
+              console.log(diagonalLine);   
+          }        
+      }
+      recurse(colNum,rowNum);
+      var filteredDiag = diagonalLine.filter(function (value) {
+        return value === 1;
+      })
+      if (filteredDiag.length > 1) {
+        return true;
+      };
+
       return false; // fixme
     },
+      //we can increment row by 1 and increment column by 1 to find the diagonal patterns
+        //if column[0].. then diagonal will be next row column[1]
+        
+        //this.attributes[startPoint + 1][majorDiagonalColumnIndexAtFirstRow + 1];
 
     // test if any major diagonals on this board contain conflicts
     hasAnyMajorDiagonalConflicts: function() {
+      for (var i = 0; i < this.attributes.n; i++) {
+        if (this.hasMajorDiagonalConflictAt(i) === true) {
+          return true;
+        }
+      };
       return false; // fixme
     },
 
